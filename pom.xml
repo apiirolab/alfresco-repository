@@ -1391,6 +1391,7 @@
     </profiles>
 
     <build>
+    <pluginManagement>
         <plugins>
             <!-- Create a jar of test classes -->
             <plugin>
@@ -1539,10 +1540,7 @@
                     </dependency>
                 </dependencies>
             </plugin>
-        </plugins>
 
-        <pluginManagement>
-            <plugins>
                 <plugin>
                     <groupId>org.codehaus.mojo</groupId>
                     <artifactId>license-maven-plugin</artifactId>
