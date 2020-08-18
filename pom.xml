@@ -418,16 +418,25 @@
             <groupId>xerces</groupId>
             <artifactId>xercesImpl</artifactId>
             <version>2.12.0-alfresco-patched-20191004</version>
+            <exclusions>
+                <!-- [BB] Excluded to avoid conflict in JDK9+ as it includes javax.xml and w3c.org -->
+                <exclusion>
+                    <groupId>xml-apis</groupId>
+                    <artifactId>xml-apis</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>xalan</groupId>
             <artifactId>xalan</artifactId>
             <version>2.7.2-alfresco</version>
-        </dependency>
-        <dependency>
-            <groupId>xml-apis</groupId>
-            <artifactId>xml-apis</artifactId>
-            <version>1.4.01</version>
+            <exclusions>
+                <!-- [BB] Excluded to avoid conflict in JDK9+ as it includes javax.xml and w3c.org -->
+                <exclusion>
+                    <groupId>xml-apis</groupId>
+                    <artifactId>xml-apis</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>jakarta.annotation</groupId>
@@ -1100,7 +1109,18 @@
                 <groupId>org.apache.geronimo.specs</groupId>
                 <artifactId>geronimo-jta_1.1_spec</artifactId>
               </exclusion>
+              <!-- [BB] Excluded to avoid conflict in JDK9+ as it includes javax.xml and w3c.org
+                   A PATCH MUST BE POSTED IN AN ARCHIVE AS THIS LIBRARY IS USED  -->
+              <exclusion>
+                <groupId>xpp3</groupId>
+                <artifactId>xpp3</artifactId>
+              </exclusion>
             </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>xpp3</groupId>
+            <artifactId>xpp3</artifactId>
+            <version>1.1.3.4.O_JDK9</version>
         </dependency>
         <dependency>
             <groupId>org.alfresco</groupId>
@@ -1206,6 +1226,11 @@
               <exclusion>
                   <groupId>javax.annotation</groupId>
                   <artifactId>javax.annotation-api</artifactId>
+              </exclusion>
+              <!-- [BB] Excluded as conflicts with JDK9+ as it includes javax.transaction -->
+              <exclusion>
+                <groupId>org.apache.geronimo.specs</groupId>
+                <artifactId>geronimo-jta_1.1_spec</artifactId>
               </exclusion>
             </exclusions>
         </dependency>
