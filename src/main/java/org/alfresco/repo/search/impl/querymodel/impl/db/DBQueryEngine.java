@@ -233,12 +233,12 @@ public class DBQueryEngine implements QueryEngine
         stopWatch.start();
         List<Node> nodes = selectNodes(options, dbQuery);
         stopWatch.stop();
-        logger.error("Selected " + nodes.size() + " nodes in " + stopWatch.getLastTaskTimeMillis() + "ms");
+        logger.debug("Selected " + nodes.size() + " nodes in " + stopWatch.getLastTaskTimeMillis() + "ms");
         
         stopWatch.start();
         QueryEngineResults queryResults = createQueryResults(nodes, options);
         stopWatch.stop();
-        logger.error("Selected query results in " + stopWatch.getLastTaskTimeMillis() + "ms");
+        logger.debug("Selected query results in " + stopWatch.getLastTaskTimeMillis() + "ms");
         
 		return queryResults;
 	}
@@ -265,12 +265,12 @@ public class DBQueryEngine implements QueryEngine
 		List<Node> nodes = new ArrayList<Node>();
 		if(isForDenormalizedTable(dbQuery, options)) 
 		{
-			logger.info("Using the denormalized table");
+			logger.debug("Using the denormalized table");
         	nodes = template.selectList(SELECT_BY_DYNAMIC_QUERY_FAST, dbQuery);
         }
         else 
         {
-        	logger.info("Using the standard table");
+        	logger.debug("Using the standard table");
         	nodes = template.selectList(SELECT_BY_DYNAMIC_QUERY, dbQuery);
         }
 		return nodes;
