@@ -72,6 +72,10 @@ public class DBQuery extends BaseQuery implements DBQueryBuilderComponent
 
     private Long sinceTxId;
     
+    private int maxItems;
+    
+    private int skipCount;
+    
     Set<String> selectorGroup;
     
     /**
@@ -866,7 +870,27 @@ public class DBQuery extends BaseQuery implements DBQueryBuilderComponent
         return propDef.getDataType();
     }
     
-    /**
+    public int getMaxItems() 
+    {
+		return maxItems;
+	}
+
+	public void setMaxItems(int maxItems) 
+	{
+		this.maxItems = maxItems;
+	}
+
+	public int getSkipCount() 
+	{
+		return skipCount;
+	}
+
+	public void setSkipCount(int skipCount) 
+	{
+		this.skipCount = skipCount;
+	}
+
+	/**
      * @param stringValues String[]
      * @param nodeDAO NodeDAO
      * @param tenantService TenantService

@@ -26,7 +26,6 @@
 package org.alfresco.repo.search.impl.querymodel.impl.db;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
@@ -41,9 +40,6 @@ import org.alfresco.repo.domain.node.Node;
 import org.alfresco.repo.domain.node.NodeDAO;
 import org.alfresco.repo.domain.qname.QNameDAO;
 import org.alfresco.repo.search.impl.lucene.PagingLuceneResultSet;
-import org.alfresco.repo.search.impl.querymodel.Argument;
-import org.alfresco.repo.search.impl.querymodel.Constraint;
-import org.alfresco.repo.search.impl.querymodel.Function;
 import org.alfresco.repo.search.impl.querymodel.FunctionEvaluationContext;
 import org.alfresco.repo.search.impl.querymodel.Query;
 import org.alfresco.repo.search.impl.querymodel.QueryEngine;
@@ -51,7 +47,6 @@ import org.alfresco.repo.search.impl.querymodel.QueryEngineResults;
 import org.alfresco.repo.search.impl.querymodel.QueryModelException;
 import org.alfresco.repo.search.impl.querymodel.QueryModelFactory;
 import org.alfresco.repo.search.impl.querymodel.QueryOptions;
-import org.alfresco.repo.search.impl.querymodel.impl.BaseConjunction;
 import org.alfresco.repo.tenant.TenantService;
 import org.alfresco.service.cmr.dictionary.DictionaryService;
 import org.alfresco.service.cmr.repository.NodeService;
@@ -233,12 +228,12 @@ public class DBQueryEngine implements QueryEngine
         stopWatch.start();
         List<Node> nodes = selectNodes(options, dbQuery);
         stopWatch.stop();
-        logger.error("Selected " + nodes.size() + " nodes in " + stopWatch.getLastTaskTimeMillis() + "ms");
+        logger.debug("Selected " + nodes.size() + " nodes in " + stopWatch.getLastTaskTimeMillis() + "ms");
         
         stopWatch.start();
         QueryEngineResults queryResults = createQueryResults(nodes, options);
         stopWatch.stop();
-        logger.error("Selected query results in " + stopWatch.getLastTaskTimeMillis() + "ms");
+        logger.debug("Selected query results in " + stopWatch.getLastTaskTimeMillis() + "ms");
         
 		return queryResults;
 	}
@@ -262,15 +257,18 @@ public class DBQueryEngine implements QueryEngine
 
 	private List<Node> selectNodes(QueryOptions options, DBQuery dbQuery) 
 	{
+		dbQuery.setMaxItems(options.getMaxItems());
+		dbQuery.setSkipCount(options.getSkipCount());
+		
 		List<Node> nodes = new ArrayList<Node>();
 		if(isForDenormalizedTable(dbQuery, options)) 
 		{
-			logger.info("Using the denormalized table");
+			logger.debug("Using the denormalized table");
         	nodes = template.selectList(SELECT_BY_DYNAMIC_QUERY_FAST, dbQuery);
         }
         else 
         {
-        	logger.info("Using the standard table");
+        	logger.debug("Using the standard table");
         	nodes = template.selectList(SELECT_BY_DYNAMIC_QUERY, dbQuery);
         }
 		return nodes;
