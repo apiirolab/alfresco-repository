@@ -52,6 +52,7 @@ import org.alfresco.service.cmr.dictionary.DictionaryService;
 import org.alfresco.service.cmr.repository.NodeService;
 import org.alfresco.service.cmr.repository.StoreRef;
 import org.alfresco.service.cmr.search.ResultSet;
+import org.alfresco.service.cmr.search.SearchParameters;
 import org.alfresco.service.namespace.NamespaceService;
 import org.alfresco.service.namespace.QName;
 import org.alfresco.util.Pair;
@@ -245,8 +246,14 @@ public class DBQueryEngine implements QueryEngine
             set.add(node.getId());
         }
         List<Long> nodeIds = new ArrayList<Long>(set);
-        ResultSet rs =  new DBResultSet(options.getAsSearchParmeters(), nodeIds, nodeDAO, nodeService, tenantService, Integer.MAX_VALUE);
-        ResultSet paged = new PagingLuceneResultSet(rs, options.getAsSearchParmeters(), nodeService);
+        
+        SearchParameters params = options.getAsSearchParmeters();
+        params.setSkipCount(0);
+        
+        DBResultSet rs =  new DBResultSet(params, nodeIds, nodeDAO, nodeService, tenantService, Integer.MAX_VALUE);
+        rs.setNumberFound(computeNumberFound(options, nodeIds.size()));
+        
+        PagingLuceneResultSet paged = new PagingLuceneResultSet(rs, params, nodeService);
         
         Map<Set<String>, ResultSet> answer = new HashMap<Set<String>, ResultSet>();
         HashSet<String> key = new HashSet<String>();
@@ -255,9 +262,17 @@ public class DBQueryEngine implements QueryEngine
         return new QueryEngineResults(answer);
 	}
 
+	private int computeNumberFound(QueryOptions options, int numberOfIds) 
+	{
+		if(numberOfIds < options.getMaxItems())
+    		return numberOfIds + options.getSkipCount();
+    	else
+    		return options.getMaxItems() + options.getSkipCount() + 1;
+	}
+	
 	private List<Node> selectNodes(QueryOptions options, DBQuery dbQuery) 
 	{
-		dbQuery.setMaxItems(options.getMaxItems());
+		dbQuery.setMaxItems(options.getMaxItems() +1);
 		dbQuery.setSkipCount(options.getSkipCount());
 		
 		List<Node> nodes = new ArrayList<Node>();
